@@ -2,9 +2,6 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -25,9 +22,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        const user = (await userModel.getUserByEmail(email) as any)[0];
+        const user = (await userModel.getUserByUsername(username) as any)[0];
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             res.status(401).json({ success: false, message: 'Username atau password salah!' });
