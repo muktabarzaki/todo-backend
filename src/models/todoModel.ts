@@ -1,20 +1,20 @@
 import pool from '../config/db.js';
 
 const todoModel = {
-  getTodosByUserId: async (userId: number) => {
-    const [rows] = await pool.query(
-      'SELECT * FROM todos WHERE user_id = ? ORDER BY id DESC',
-      [userId]
-    );
-    return rows;
-  },
-
-  getById: async (id: number, userId: number) => {
-  const [rows]: any = await pool.query(
-    'SELECT * FROM todos WHERE id = ? AND user_id = ?',
-    [id, userId]
+  getByUserId: async (userId: number, limit: number, offset: number) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM todos WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?',
+    [userId, limit, offset]
   );
-  return rows[0]; // Kembalikan 1 data, atau undefined jika tidak ditemukan
+  return rows;
+},
+
+countByUserId: async (userId: number) => {
+  const [rows]: any = await pool.query(
+    'SELECT COUNT(*) AS total FROM todos WHERE user_id = ?',
+    [userId]
+  );
+  return rows[0].total as number;
 },
 
   createTodo: async (userId: number, task: string) => {
